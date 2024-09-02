@@ -14,3 +14,5 @@ On the update of the project to a DirectX12 project, I intend to add the followi
 - [ ] improve coming to a rest.
 - [ ] introduce bounding hierarchy volume.
 - [ ] Real time collision checks.
+
+## Project Controls

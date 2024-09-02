@@ -7,6 +7,7 @@ For all Camera states:
 | -------- | ------- |
 | w  | toggle wireframe    |
 | c | change camera state     |
+
 The following camera states are available:
 - Map
 - Plane

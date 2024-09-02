@@ -1,0 +1,23 @@
+#ifndef UtilsH
+#define UtilsH
+#include <vector>
+
+
+template<typename T>
+void insertionSort(std::vector<T*>& arr) {
+	int i, j;
+	T* tmp;
+	for (i = 1; i < arr.size(); i++) {
+		tmp = arr[i];
+	float tmpX = tmp->GetPosition().x;
+		j = i-1;
+		while (j >= 0 && tmpX < arr[j]->GetPosition().x) {
+			arr[j + 1] = arr[j];    //moves element forward
+			j = j - 1;
+		}
+		arr[j + 1] = tmp;		//insert element in proper place
+	}
+}
+
+
+#endif

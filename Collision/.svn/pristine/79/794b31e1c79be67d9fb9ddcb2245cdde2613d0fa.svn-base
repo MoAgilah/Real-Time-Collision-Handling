@@ -1,0 +1,34 @@
+#ifndef CollisionsH
+#define CollisionsH
+
+#include "Application.h"
+
+class Ball;
+__declspec(align(16)) class Collisions
+{
+public:
+	Collisions();
+	~Collisions();
+	static Collisions* GetCol(); 
+	//dynamic to dynamic sphere col test to dynamic to static sphere col
+	bool TestMovingSphereToSphere(Ball* b0, Ball* b1, float &t);
+	//intersect ray to sphere collision check
+	bool IntersectRaySphere(XMFLOAT3 p, XMVECTOR d, Ball* s, float &t, XMFLOAT3 &q);
+	//if there is a collision between two ball's resolve it
+	void ResolveSphereCollisions(Ball* b0, Ball* b1);
+private:
+	static Collisions* self;
+public:
+	void* operator new(size_t i)
+	{
+		return _mm_malloc(i, 16);
+	}
+
+		void operator delete(void* p)
+	{
+		_mm_free(p);
+	}
+};
+
+#endif
+

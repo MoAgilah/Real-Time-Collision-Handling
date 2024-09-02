@@ -1,0 +1,36 @@
+#ifndef UtilsH
+#define UtilsH
+
+#include "Application.h"
+#include <vector>
+
+//moved the face collision data to allow several classes to know of it
+struct FaceCollisionData
+{
+	XMFLOAT3 m_v0;
+	XMFLOAT3 m_v1;
+	XMFLOAT3 m_v2;
+	XMFLOAT3 m_vNormal;
+	bool m_bCollided; // Debug colouring
+	bool m_bDebug;	  //Debug mode colouring
+	bool m_bDisabled;
+};
+
+//a templated insertion sort algorithm to attempt to achieve better temporal coherence between frames
+template<typename T>
+void insertionSort(std::vector<T*>& arr) {
+	int i, j;
+	T* tmp;
+	for (i = 1; i < arr.size(); i++) {
+		tmp = arr[i];
+		float tmpX = tmp->GetPosition().x;
+		j = i - 1;
+		while (j >= 0 && tmpX < arr[j]->GetPosition().x) {
+			arr[j + 1] = arr[j];    //moves element forward
+			j = j - 1;
+		}
+		arr[j + 1] = tmp;        //insert element in proper place
+	}
+}
+
+#endif

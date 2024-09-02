@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="App.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonFont.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DHelpers.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonApp.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonFont.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DHelpers.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{83c0ae24-fd29-4cce-a1f0-222d50cc2255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{c0af964b-5a37-47d1-8444-06f3d5a7f1c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

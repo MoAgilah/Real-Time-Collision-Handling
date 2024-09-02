@@ -1,0 +1,60 @@
+#ifndef BallManagerH
+#define BallManagerH
+
+#include <vector>
+#include <algorithm>
+
+#include "Ball.h"
+#include "HeightMap.h"
+#include "Utils.h"
+
+#define MinNumBalls 100
+#define MaxNumBalls 100
+
+class BallManager
+{
+public:
+	BallManager(HeightMap* mapData);
+	~BallManager();
+
+	//updating all active balls
+	void UpdateBalls(float dt);
+	//draw them balls
+	void DrawBalls(Application* pApp);
+	Ball* GetFirstAvailable();
+	//initialisation of a new ball
+	void InitBall(XMFLOAT3 iPos = XMFLOAT3(0, 0, 0), XMFLOAT3 iVel = XMFLOAT3(0, 0, 0), XMFLOAT3 iGrav = XMFLOAT3(0, 0, 0));
+	//check for balls beyond screen space
+	void CheckForOutOfBounds();
+	//returns active ball for cycling through center and corners
+	Ball* GetDebugBall();
+	//update the debug ball
+	void InitDebugBall(XMFLOAT3 iPos, XMFLOAT3 iVel = XMFLOAT3(0, 0, 0), XMFLOAT3 iGrav = XMFLOAT3(0, 0, 0));
+	//double drop
+	void DoubleDrop(XMFLOAT3 iPos, XMFLOAT3 iVel = XMFLOAT3(0, 0, 0), XMFLOAT3 iGrav = XMFLOAT3(0, 0, 0));
+	//increase the number of balls in the pool
+	void IncreaseNumOfBalls();
+	//decrease the number of balls in the pool
+	void DecreaseNumOfBalls();
+	//drop all balls in the pool at random at the same time
+	void DropAll();
+	//clears all active balls
+	void ClearAll();
+	//sweep and prune on the x dimension
+	void OneDimensionalSweepAndPrune(int& numOfTests);
+	//dynamic to dynamic sphere col test to dynamic to static sphere col
+	bool TestMovingSphereToSphere(Ball* b0, Ball* b1, float &t);
+	//test to see if a ray intersects a sphere
+	bool IntersectRaySphere(XMFLOAT3 p, XMVECTOR d, Ball* s, float &t, XMFLOAT3 &q);
+	//if there is a collision between two ball's resolve it
+	void ResolveSphereCollisions(Ball* b0, Ball* b1);
+private:
+	Ball* firstAvailable;				//currently the first available 
+	Ball* DebugBall;					//the cyclic debug ball
+	CommonMesh *m_pMesh;				//shared mesh for all balls
+	std::vector<Ball*> activeBalls;		//vector of active balls
+	HeightMap* map;						//a pointer to the heightmap
+	static int userControlledBall;		//a variable defining the active ball's index
+};
+
+#endif

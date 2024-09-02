@@ -1,0 +1,55 @@
+#ifndef BallH
+#define BallH
+
+#include "Application.h"
+#include "CommonMesh.h"
+
+class Ball
+{
+public:
+	Ball(CommonMesh *sphere,XMFLOAT3 pos = XMFLOAT3(0, 0, 0));
+	~Ball();
+	void Update(float deltaTime);
+	void Draw();
+
+	//accessor for the individual balls sphere's collided variable
+	bool GetSphereCollided();
+	void SetSphereCollided(bool val);
+
+	//accessor for the individual sphere's position
+	XMFLOAT3 GetPosition();
+	void SetPosition(XMFLOAT3 pos);
+
+	//accessor for the individual sphere's velocity
+	XMFLOAT3 GetVelocity();
+	void SetVelocity(XMFLOAT3 vel);
+
+	//accessor for the individual sphere's gravity
+	XMFLOAT3 GetGravity();
+	void SetGravity(XMFLOAT3 grav);
+	
+	//accessor for the individual ball
+	XMMATRIX GetWorld();
+	void SetWorld(XMFLOAT3 pos);
+
+	//accessor for the individual balls sphere's speed
+	float GetSpeed();
+	void SetSpeed(float speed);
+private:
+	CommonMesh *m_pMesh;
+
+	bool collided;
+
+	XMFLOAT3 mPosition;
+	XMFLOAT3 mVelocity;
+	XMFLOAT3 mGravity;
+
+	XMMATRIX worldMtx;
+
+	float mSpeed;
+
+	
+};
+
+#endif
+ 

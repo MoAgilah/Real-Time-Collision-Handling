@@ -1,0 +1,105 @@
+#include "BallManager.h"
+
+int BallManager::userControlledBall = -1;
+
+BallManager::BallManager(HeightMap* mapData)
+	:map(mapData)
+{
+	m_pMesh = CommonMesh::NewSphereMesh(Application::s_pApp, 1.0f, 16, 16);
+}
+
+
+BallManager::~BallManager()
+{
+	map = nullptr;
+	ClearAll();
+}
+
+void BallManager::createBall(XMFLOAT3 iPos, XMFLOAT3 iVel, XMFLOAT3 iGrav)
+{
+	Ball* temp = new Ball(m_pMesh,iPos);
+	temp->SetVelocity(iVel);
+	temp->SetGravity(iGrav);
+
+	activeBalls.push_back(temp);
+	++userControlledBall;
+}
+
+void BallManager::UpdateBalls(float dt)
+{
+	// Update Sphere
+	XMVECTOR vSColPos, vSColNorm;
+
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		if (!activeBalls[i]->GetSphereCollided())
+		{
+			XMVECTOR vSPos = XMLoadFloat3(&activeBalls[i]->GetPosition());
+			XMVECTOR vSVel = XMLoadFloat3(&activeBalls[i]->GetVelocity());
+			XMVECTOR vSAcc = XMLoadFloat3(&activeBalls[i]->GetGravity());
+
+			vSPos += vSVel; // Really important that we add LAST FRAME'S velocity as this was how fast the collision is expecting the ball to move
+			vSVel += vSAcc; // The new velocity gets passed through to the collision so it can base its predictions on our speed NEXT FRAME
+
+			XMFLOAT3 pos, vel;
+
+			XMStoreFloat3(&vel, vSVel);
+			activeBalls[i]->SetVelocity(vel);
+
+			XMStoreFloat3(&pos, vSPos);
+			activeBalls[i]->SetPosition(pos);
+
+			activeBalls[i]->SetSpeed(XMVectorGetX(XMVector3Length(vSVel)));
+
+			bool collided = map->RayCollision(vSPos, vSVel, activeBalls[i]->GetSpeed(), vSColPos, vSColNorm);
+			activeBalls[i]->SetSphereCollided(collided);
+
+			if (activeBalls[i]->GetSphereCollided())
+			{
+				//here for bouncy bouncy
+				activeBalls[i]->SetVelocity(XMFLOAT3(0.0f, 0.0f, 0.0f));
+				XMStoreFloat3(&pos, vSColPos);
+				activeBalls[i]->SetPosition(pos);
+			}
+		}
+		activeBalls[i]->Update(dt);
+	}
+}
+
+void BallManager::RemoveBall(int index)
+{
+	Ball* temp = activeBalls[index];
+	activeBalls.erase(std::remove(activeBalls.begin(), activeBalls.end(), temp), activeBalls.end());
+}
+
+void BallManager::ClearAll()
+{
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		delete activeBalls[i];
+		activeBalls[i] = nullptr;
+	}
+
+	activeBalls.clear();
+	userControlledBall = -1;
+}
+
+Ball* BallManager::GetUsersBall()
+{
+	return activeBalls[userControlledBall];
+}
+
+Ball* BallManager::GetBallByIndex(int index)
+{
+	return activeBalls[index];
+}
+
+int BallManager::GetNumOfBalls()
+{
+	return activeBalls.size();
+}
+
+int BallManager::GetUsersBallNumber()
+{
+	return userControlledBall;
+}

@@ -1,0 +1,40 @@
+#ifndef BallManagerH
+#define BallManagerH
+
+#include <vector>
+#include <algorithm>
+
+#include "Ball.h"
+#include "HeightMap.h"
+
+class BallManager
+{
+public:
+	BallManager(HeightMap* mapData);
+	~BallManager();
+	
+	//creation of a new ball
+	void createBall(XMFLOAT3 iPos = XMFLOAT3(0, 0, 0), XMFLOAT3 iVel = XMFLOAT3(0, 0, 0), XMFLOAT3 iGrav = XMFLOAT3(0, 0, 0));
+	//updating all active balls
+	void UpdateBalls(float dt);
+	
+	//returns active ball for cycling through center and corners
+	Ball* GetUsersBall();
+	//returns a ball by index
+	Ball* GetBallByIndex(int index);
+	//returns the size of the array
+	int GetNumOfBalls();
+	//returns active ball index
+	int GetUsersBallNumber();
+	//removes ball by index
+	void RemoveBall(int index);
+	//clears all active balls
+	void ClearAll();
+private:
+	CommonMesh *m_pMesh;				//shared mesh for all balls
+	std::vector<Ball*> activeBalls;		//vector of active balls
+	HeightMap* map;						//a pointer to the heightmap
+	static int userControlledBall;		//a variable defining the active ball's index
+};
+
+#endif

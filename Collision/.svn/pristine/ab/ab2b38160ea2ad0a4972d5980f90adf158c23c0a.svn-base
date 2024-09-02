@@ -1,0 +1,38 @@
+#ifndef BallH
+#define BallH
+
+#include "Application.h"
+#include "CommonMesh.h"
+
+class Ball
+{
+public:
+	Ball(XMFLOAT3 pos = XMFLOAT3(0,0,0));
+	~Ball();
+	void Update(float deltaTime);
+	void Draw();
+
+	XMFLOAT3 GetPosition();
+	void SetPosition(XMFLOAT3 pos);
+
+	XMFLOAT3 GetVelocity();
+	void SetVelocity(XMFLOAT3 vel);
+
+	float GetSpeed();
+	void SetSpeed(float speed);
+
+	XMFLOAT3 GetGravity();
+	void SetGravity(XMFLOAT3 grav);
+
+	XMMATRIX GetWorld();
+private:
+	CommonMesh *m_pMesh;
+	XMFLOAT3 mPosition;
+	XMFLOAT3 mVelocity;
+	float mSpeed;
+	XMFLOAT3 mGravity;
+	XMMATRIX worldMtx;
+};
+
+#endif
+ 

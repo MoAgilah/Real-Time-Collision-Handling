@@ -1,0 +1,403 @@
+#include "BallManager.h"
+
+int BallManager::userControlledBall = -1;
+
+bool sortX(Ball* i, Ball* j) { return (i->GetPosition().x < j->GetPosition().x); }
+
+BallManager::BallManager(HeightMap* mapData)
+	:map(mapData)
+{
+	//create single mesh instance
+	m_pMesh = CommonMesh::NewSphereMesh(Application::s_pApp, 1.f, 16, 16);
+	//create debug ball
+	DebugBall = new Ball(m_pMesh);
+	//put it in the vector
+	activeBalls.push_back(DebugBall);
+
+	//create the mininum of balls
+	for (int i = 1; i < MinNumBalls; i++)
+	{
+		activeBalls.push_back(new Ball(m_pMesh));
+	}
+
+	//assign the first non debug ball as first available
+	firstAvailable = activeBalls[1];
+}
+
+
+void BallManager::IncreaseNumOfBalls()
+{
+	//as long as the number of balls is less than max
+	if (activeBalls.size() < MaxNumBalls)
+	{
+		//create another
+		activeBalls.push_back(new Ball(m_pMesh));
+	}
+}
+
+void BallManager::DecreaseNumOfBalls()
+{
+	//as long as the ball mark for deletion is not the debug ball or first available
+	if (activeBalls.size() != 2)
+	{
+		//delete the pointer 
+		delete activeBalls.back();
+		//remove ball from pool
+		activeBalls.pop_back();
+	}
+}
+
+BallManager::~BallManager()
+{
+	map = nullptr;	//null reference to height map
+	for (int i = 0; i < activeBalls.size(); i++)
+	{
+		//deallocate pointer in array
+		delete activeBalls[i];	
+		activeBalls[i] = nullptr;
+	}
+
+	delete m_pMesh;	//deallocate sphere mesh
+}
+
+void BallManager::InitBall(XMFLOAT3 iPos, XMFLOAT3 iVel, XMFLOAT3 iGrav)
+{
+	Ball* ball = firstAvailable;	//capture the first available in a temp var
+
+	for (int i = 1; i < activeBalls.size(); ++i)
+	{
+		//if activeball is the first available 
+		if (activeBalls[i] == firstAvailable)
+			continue;	//continue
+		
+		//the ball isn't active
+		if (!activeBalls[i]->GetEnabled())
+		{
+			//make it the first available
+			firstAvailable = activeBalls[i];
+			//if found break out of loop
+			break;
+		}
+	}
+
+	//init the temp ball and then activate it 
+	ball->SetPosition(iPos);
+	ball->SetVelocity(iVel);
+	ball->SetGravity(iGrav);
+	ball->SetEnabled(true);
+	ball->SetSphereCollided(false);
+}
+
+Ball* BallManager::GetFirstAvailable()
+{
+	return firstAvailable;
+}
+
+void BallManager::InitDebugBall(XMFLOAT3 iPos, XMFLOAT3 iVel, XMFLOAT3 iGrav)
+{
+	//init the debug ball and activate it
+	DebugBall->SetPosition(iPos);
+	DebugBall->SetVelocity(iVel);
+	DebugBall->SetGravity(iGrav);
+	DebugBall->SetEnabled(true);
+	DebugBall->SetSphereCollided(false);
+}
+
+void BallManager::UpdateBalls(float dt)
+{
+	//Update Sphere
+	XMVECTOR vSColPos, vSColNorm;
+	float damping = 0.9;
+
+	int numOfTests = 0;
+	int testnumofhits = 0;
+	
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		if (activeBalls[i]->GetEnabled())
+		{
+			testnumofhits++;
+
+			activeBalls[i]->Update(dt);
+
+			//if sphere hasn't collided
+			if (!activeBalls[i]->GetSphereCollided())
+			{
+				//extract the information from the ball
+				XMVECTOR vSPos = XMLoadFloat3(&activeBalls[i]->GetPosition());
+				XMVECTOR vSVel = XMLoadFloat3(&activeBalls[i]->GetVelocity());
+				XMVECTOR vSAcc = XMLoadFloat3(&activeBalls[i]->GetGravity());
+
+				//update the values
+				vSPos += vSVel; //Really important that we add LAST FRAME'S velocity as this was how fast the collision is expecting the ball to move
+				vSVel += vSAcc; //The new velocity gets passed through to the collision so it can base its predictions on our speed NEXT FRAME
+
+				XMFLOAT3 pos, vel;
+
+				//pass it back to the ball
+				XMStoreFloat3(&vel, vSVel);
+				activeBalls[i]->SetVelocity(vel);
+
+				XMStoreFloat3(&pos, vSPos);
+				activeBalls[i]->SetPosition(pos);
+
+				activeBalls[i]->SetSpeed(XMVectorGetX(XMVector3Length(vSVel)));
+
+				//extract collisional data
+				FaceCollisionData* FCD = map->RayCollision(vSPos, vSVel, activeBalls[i]->GetSpeed(), vSColPos, vSColNorm);
+
+				bool collided = false;
+
+				//if FCD isnt null
+				if (FCD != nullptr)
+				{
+					//there has been a collision
+					collided = true;
+				}
+
+				//pass collided to the ball
+				activeBalls[i]->SetSphereCollided(collided);
+
+				//if collided
+				if (activeBalls[i]->GetSphereCollided())
+				{
+					//get previous velocity from the ball
+					XMVECTOR V = XMLoadFloat3(&activeBalls[i]->GetVelocity());
+					//get the face's normal that ball collided with
+					XMVECTOR N = XMLoadFloat3(&FCD->m_vNormal);
+					//V.N
+					float dotVN = XMVectorGetX(XMVector3Dot(V, N));
+					//R = V - 2N(V.N)
+					XMVECTOR R = (V - ((2 * N)*dotVN))*damping;
+
+					XMFLOAT3 newVel;
+					XMStoreFloat3(&newVel, R);
+
+					//here for bouncy bouncy
+					activeBalls[i]->SetVelocity(newVel);
+					XMStoreFloat3(&pos, vSColPos);
+					activeBalls[i]->SetPosition(pos);
+					activeBalls[i]->SetSphereCollided(false);
+				}
+			}
+		}
+	}
+
+	//1-Dimensional Sweep and prune
+	OneDimensionalSweepAndPrune(numOfTests);
+
+	if (testnumofhits == activeBalls.size() - 1)
+	{
+		int x;
+		x = 1;
+	}
+
+	char text[256];
+	sprintf_s(text, "'num of tests =%i\n", numOfTests);
+	OutputDebugStringA(text);
+}
+
+void BallManager::DrawBalls(Application* pApp)
+{
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		//if enabled
+		if (activeBalls[i]->GetEnabled())
+		{
+			//set the world matrix
+			pApp->SetWorldMatrix(activeBalls[i]->GetWorld());
+			//draw the ball
+			activeBalls[i]->Draw();
+		}
+	}
+}
+
+void BallManager::CheckForOutOfBounds()
+{
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		//if below the height map
+		if (activeBalls[i]->GetPosition().y <= -10.f)
+		{
+			//return to the pool
+			activeBalls[i]->SetEnabled(false);
+		}
+	}
+}
+
+void BallManager::ClearAll()
+{
+	//disactivate all of the balls1
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		activeBalls[i]->SetEnabled(false);
+	}
+}
+
+Ball* BallManager::GetDebugBall()
+{
+	return DebugBall;
+}
+
+
+void BallManager::DropAll()
+{
+	//for all expect the debug ball
+	for (int i = 1; i < activeBalls.size(); ++i)
+	{
+		//randomly get a position
+		XMFLOAT3 pos = XMFLOAT3((float)((rand() % 14 - 7.0f) - 0.5), 20.0f, (float)((rand() % 14 - 7.0f) - 0.5));
+
+		//initialise and activate the ball
+		activeBalls[i]->SetPosition(pos);
+		activeBalls[i]->SetVelocity(XMFLOAT3(0.0f, 0.2f, 0.0f));
+		activeBalls[i]->SetGravity(XMFLOAT3(0.0f, -0.05f, 0.0f));
+		activeBalls[i]->SetSphereCollided(false);
+		activeBalls[i]->SetEnabled(true);
+	}
+}
+
+void BallManager::OneDimensionalSweepAndPrune(int& numOfTests)
+{
+	//perform insertion sort to achieve temporal coherent between frames i.e. small updates
+	insertionSort(activeBalls);
+
+	for (int i = 0; i < activeBalls.size(); ++i)
+	{
+		if (!activeBalls[i]->GetEnabled()) continue;	//if enabled
+
+		for (int j = i + 1; j < activeBalls.size(); ++j)
+		{
+			if (!activeBalls[j]->GetEnabled()) continue; //if enabled
+
+			//if ball2.maxX < balll1.minX
+			if (activeBalls[j]->GetPosition().x + activeBalls[j]->GetRadius() < activeBalls[i]->GetPosition().x - activeBalls[i]->GetRadius())
+				break;
+
+			//if ball1.maxY < balll2.minY|| ball2.maxY < balll1.minY
+			//activeBalls[i]->GetPosition().z + activeBalls[i]->GetRadius() < activeBalls[j]->GetPosition().z - activeBalls[j]->GetRadius() ||
+			if (activeBalls[i]->GetPosition().y + activeBalls[i]->GetRadius() < activeBalls[j]->GetPosition().y - activeBalls[j]->GetRadius() ||
+				activeBalls[j]->GetPosition().y + activeBalls[j]->GetRadius() < activeBalls[i]->GetPosition().y - activeBalls[i]->GetRadius())
+				continue;
+
+			//if ball1.maxZ < balll2.minZ || ball2.maxZ < balll1.minZ
+			if (activeBalls[i]->GetPosition().z + activeBalls[i]->GetRadius() < activeBalls[j]->GetPosition().z - activeBalls[j]->GetRadius() ||
+				activeBalls[j]->GetPosition().z + activeBalls[j]->GetRadius() < activeBalls[i]->GetPosition().z - activeBalls[i]->GetRadius())
+				continue;
+
+			numOfTests++;	//if past all early out test is required increment debug counter
+			float colDist = 0;	//initialie colDist
+
+			if (TestMovingSphereToSphere(activeBalls[i], activeBalls[j], colDist))
+				ResolveSphereCollisions(activeBalls[i], activeBalls[j]);
+		}
+	}
+}
+
+// Intersect sphere s0 moving in direction d over time interval t0 <= t <= t1, against
+// a stationary sphere s1. If found intersecting, return time(t) of collision
+bool BallManager::TestMovingSphereToSphere(Ball* b0, Ball* b1, float &colDist)
+{
+	//make a copy to create expanded sphere for collision
+	Ball onstack(*b1);
+
+	//expand sphere b1 by the radius of b0
+	onstack.SetRadius(b0->GetRadius() + onstack.GetRadius());
+
+	XMVECTOR vel0, vel1, V;
+	vel0 = XMLoadFloat3(&b0->GetVelocity());
+	vel1 = XMLoadFloat3(&b1->GetVelocity());
+	
+	//subtract the velocity of s1 from both s0 and s1, making s1 stationary
+	V = vel1 - vel0;	
+	float vLen = XMVectorGetX(XMVector3Length(V));
+	
+	//can now test directed segment s = s0.c + tv, v = (v0-v1)/||v0-v1|| against the expanded sphere for intersection
+	XMFLOAT3 colPos = XMFLOAT3();	//rayPoint
+	if (IntersectRaySphere(b0->GetPosition(), V / vLen, &onstack, colDist, colPos))
+	{
+		return colDist <= vLen;
+	}
+
+	return false;
+}
+
+// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
+// returns t value of intersection and intersection point q
+bool BallManager::IntersectRaySphere(XMFLOAT3 rayPos, XMVECTOR dir, Ball* s, float &colDist, XMFLOAT3 &colPos)
+{
+	XMVECTOR point(XMLoadFloat3(&rayPos)), sCenter(XMLoadFloat3(&s->GetPosition()));
+
+	// Calculate ray start's offset from the sphere center i.e. point - sphereCenter
+	XMVECTOR sphereToPoint = point - sCenter;
+
+	float b = XMVectorGetX(XMVector3Dot(sphereToPoint, dir));
+
+	float c = XMVectorGetX(XMVector3Dot(sphereToPoint, sphereToPoint)) - (s->GetRadius() * s->GetRadius());
+
+	//exit if ray's origin is outside s(c > 0) and ray is pointing away from s(b > 0)
+	if (c > 0.0f && b > 0.0f) return false;
+
+	float discR = (b * b) - c;
+
+	//a negative discriminant means the ray missed the sphere
+	if (discR < 0.0f) return false;
+
+	//ray now found to intersect the sphere, compute the smallest t value of intersection
+	colDist = -b - sqrt(discR);
+
+	//if colDist is negative 
+	if (colDist < 0.0f) colDist = 0.0f;	//ray started inside sphere so clamp colDist to zero
+	
+	//intersection point
+	XMVECTOR pos(point + colDist * dir);
+	XMStoreFloat3(&colPos, pos);
+
+	return true;
+}
+
+void BallManager::ResolveSphereCollisions(Ball* b0, Ball* b1)
+{
+	//extract the position and store in a vector for execution
+	XMVECTOR sCenter0 = XMLoadFloat3(&b0->GetPosition());
+	XMVECTOR sCenter1 = XMLoadFloat3(&b1->GetPosition());
+	
+	float distToTravel = ((b0->GetRadius() + b1->GetRadius()) - XMVectorGetX(XMVector3Length(sCenter0 - sCenter1))) / 2;
+ 	sCenter0 += XMVector3Normalize(sCenter0 - sCenter1) * (distToTravel + 0.01f);
+	sCenter1 -= XMVector3Normalize(sCenter0 - sCenter1) * (distToTravel + 0.01f);
+
+	float damping = 0.9f;
+
+	//first find the normalised vector n  
+	//from the center of sphere1 to the center of sphere2
+	XMVECTOR N = XMVector3Normalize(sCenter0 - sCenter1);
+
+	//extract the velocity vector and store in a vector for execution
+	XMVECTOR sVel0 = XMLoadFloat3(&b0->GetVelocity());
+	XMVECTOR sVel1 = XMLoadFloat3(&b1->GetVelocity());
+	
+	//find the length of the component of each of the velocity vectors along n
+	float a1 = XMVectorGetX(XMVector3Dot(sVel0, N));
+	float a2 = XMVectorGetX(XMVector3Dot(sVel1, N));
+
+	//calculate the optimised momentum of any particle with mass
+	float opP = (2.0f *(a1 - a2)) / (b0->GetMass() + b1->GetMass());
+
+	//calculate the new velocity vector for sphere 1
+	XMVECTOR newVel0 = (sVel0 - opP * b1->GetMass() * N)*damping;
+	//calculate the new velocity vector for sphere 2
+	XMVECTOR newVel1 = (sVel1 + opP * b0->GetMass() * N)*damping;
+
+	//return the values into a float 3 to be applied to the balls
+	XMFLOAT3 vel0, vel1;
+	XMStoreFloat3(&vel0, newVel0);
+	XMStoreFloat3(&vel1, newVel1);
+	b0->SetVelocity(vel0);
+	b1->SetVelocity(vel1);
+	
+	XMFLOAT3 pos0, pos1;
+	XMStoreFloat3(&pos0, sCenter0);
+	XMStoreFloat3(&pos1, sCenter1);
+	b0->SetPosition(pos0);
+	b1->SetPosition(pos1);
+}

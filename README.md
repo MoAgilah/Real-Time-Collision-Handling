@@ -18,3 +18,36 @@ On the update of the project to a DirectX12 project, I intend to add the followi
 - [ ] Real time collision checks.
 
 ## Project Controls
+For all Camera states:
+| Key    | Response |
+| -------- | ------- |
+| space bar  | toggle reduce framerate to 1 frame a second   |
+| w  | toggle wireframe    |
+| c | change camera state     |
+| r | drop a ball on a random triangle |
+| t | drop a ball on the flat top triangle |
+| u | move marked triangle left to right |
+| i | move marked triangle right to left |
+| d | drop debug ball on one of three corners or the center of the top triangle |
+| n | move debug ball target |
+| e | deactivate all active balls |
+| f | drop a ball on marked triangle and it's inverse marked triangle |
+| g | deactivate the bottom triangles |
+| h | reenabled the bottom triangles |
+| up key | increment number of balls |
+| down key | decrement number of balls |
+| b | drop all of the number of balls |
+| m | cycle heighmap to drop balls on |
+
+The following camera states are available:
+- Side
+- Top
+
+Whilst in CameraState::Side:
+
+| Key    | Response |
+| -------- | ------- |
+| q | zoom camera in     |
+| a | zoom camera out    |
+| o | rotate camera left    |
+| p | rotate camera right     |

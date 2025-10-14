@@ -108,3 +108,11 @@ To integrate it into another project:
 - **`Shared/`** scaffolding and runtime viewer were **provided by the course lecturer** and distributed to all students for demonstration purposes.  
 - The **collision-handling logic** within `Collision/` was independently implemented by the author.  
 - DirectX documentation and course materials were referenced for rendering and runtime setup.
+
+## 👤 Author
+**Mohamed Agilah**  
+🎓 Games Programmer & AI Developer  
+🌐 [Portfolio Website](https://moagilah.com/)  
+📧 Contact: agilahmohamed@gmail.com  
+
+> *Project archived for educational and portfolio purposes (October 2025).*

@@ -1,53 +1,110 @@
-# Real Time Collision Handling
-## Project Description
-![col](https://github.com/user-attachments/assets/54a49b09-41a1-4010-88be-4d6edef1cbc3)
+# Real-Time Collision Handling
 
-The project was originally built utilising Directx11  utlising the legacy [DirectX SDK](https://www.microsoft.com/en-gb/download/details.aspx?id=6812) it is has now suggested to utilise the modern Windows SDK instead. Instead of implementing the newer SDK for DirectX11 I have decided to learn DirectX12 to update this project. There are more details contained within the respository archiving my learning of this updated SDK [found here](https://github.com/MoAgilah/Introduction-to-Game-Programming-with-DirectX12).
-The project itself demonstrates the following Real time collision handling techniques:
-- Intersection tests for Moving Sphere To Sphere.
-- Intersection tests for Ray Sphere.
-- Intersection tests for Ray Cyclinder.
-- Intersection tests for Ray Triangle.
-- Intersection tests for Sphere Poly Intersection.
-- One Dimensional Sweep And Prune
-- Collision resolution - impulse, coefficient of restitution, bounce, rest
+A real-time collision detection and response system written in **C++**, featuring narrow-phase intersection tests, a simple broad-phase, and impulse-based resolution within an interactive DirectX sandbox.  
 
-On the update of the project to a DirectX12 project, I intend to add the following:
-- [ ] improve coming to a rest.
-- [ ] introduce bounding hierarchy volume.
-- [ ] Real time collision checks.
+The project was originally developed using **DirectX 11**, with ongoing exploration toward **DirectX 12** and modern rendering techniques.
 
-## Project Controls
-For all Camera states:
-| Key    | Response |
-| -------- | ------- |
-| space bar  | toggle reduce framerate to 1 frame a second   |
-| w  | toggle wireframe    |
-| c | change camera state     |
-| r | drop a ball on a random triangle |
-| t | drop a ball on the flat top triangle |
-| u | move marked triangle left to right |
-| i | move marked triangle right to left |
-| d | drop debug ball on one of three corners or the center of the top triangle |
-| n | move debug ball target |
-| e | deactivate all active balls |
-| f | drop a ball on marked triangle and it's inverse marked triangle |
-| g | deactivate the bottom triangles |
-| h | reenabled the bottom triangles |
-| up key | increment number of balls |
-| down key | decrement number of balls |
-| b | drop all of the number of balls |
-| m | cycle heighmap to drop balls on |
+---
 
-The following camera states are available:
-- Side
-- Top
+## 🎥 Preview
 
-Whilst in CameraState::Side:
+![Preview](Assets/preview.gif)
 
-| Key    | Response |
-| -------- | ------- |
-| q | zoom camera in     |
-| a | zoom camera out    |
-| o | rotate camera left    |
-| p | rotate camera right     |
+*(Demo visualising real-time sphere, ray, and polygon collisions in motion)*
+
+---
+
+## 📁 Project Structure
+
+```
+Collision/    → Collision detection and response logic (your implementation)
+Shared/       → Provided runtime framework for rendering, input, and camera
+*.sln         → Visual Studio solution file
+```
+
+> The **`Shared/`** folder was **provided by the course lecturer** and distributed to all students.  
+> It serves as scaffolding for visualising and testing your collision system — no internal modifications are required.
+
+---
+
+## ⚙️ Features
+
+- **Sphere–Sphere Collision Detection**  
+- **Ray–Sphere Intersection**  
+- **Ray–Cylinder Intersection**  
+- **Ray–Triangle Intersection**  
+- **Sphere–Polygon Tests**  
+- **1D Sweep and Prune (Broad-Phase)**  
+- **Impulse-Based Collision Resolution**  
+- **Come-to-Rest and Bounce Handling**
+
+---
+
+## 🎮 Controls
+
+| Key | Action |
+|-----|--------|
+| Space | Toggle 1 FPS slow motion |
+| W | Toggle wireframe mode |
+| C | Switch camera view (Side / Top) |
+| R | Drop a ball on a random triangle |
+| T | Drop a ball on the flat top triangle |
+| U / I | Move marked triangle (Left / Right) |
+| D | Drop a debug ball at predefined points |
+| N | Move debug-ball target |
+| E | Deactivate all active balls |
+| F | Drop a ball on a marked triangle & its inverse |
+| G / H | Disable / re-enable bottom triangles |
+| ↑ / ↓ | Increase / decrease number of balls |
+| B | Drop configured number of balls |
+| M | Cycle through heightmaps |
+
+**Camera Controls (Side View):**
+
+| Key | Action |
+|-----|--------|
+| Q | Zoom in |
+| A | Zoom out |
+| O | Rotate left |
+| P | Rotate right |
+
+---
+
+## 🧱 Building the Project
+
+**Requirements**
+- Visual Studio 2019 or 2022  
+- Windows 10/11 SDK  
+- DirectX 11 (legacy) or compatible DX12 setup  
+
+**Steps**
+1. Open `Real Time Collision Handling.sln`.  
+2. Set the build configuration to **x64 → Debug** or **Release**.  
+3. Press **F5** to build and run the demo.
+
+---
+
+## 🚀 Integration
+
+The `Collision/` module can be reused independently of the provided demo viewer.  
+
+To integrate it into another project:
+- Include the headers from `Collision/`.
+- Replace `Shared/` types with your own math and engine types as needed.
+- Hook the update and resolution functions into your own game loop or physics system.
+
+---
+
+## 🔭 Future Improvements
+
+- Enhanced resting state and friction simulation  
+- Bounding Volume Hierarchy (BVH) integration  
+- Optimised real-time checks for large object counts  
+
+---
+
+## 🙏 Acknowledgements
+
+- **`Shared/`** scaffolding and runtime viewer were **provided by the course lecturer** and distributed to all students for demonstration purposes.  
+- The **collision-handling logic** within `Collision/` was independently implemented by the author.  
+- DirectX documentation and course materials were referenced for rendering and runtime setup.

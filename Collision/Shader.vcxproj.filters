@@ -47,5 +47,21 @@
     <Filter Include="Source">
       <UniqueIdentifier>{21b2c3a5-b171-4105-993c-8886ad1f271e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bin">
+      <UniqueIdentifier>{31aaf3b7-4f52-4431-98c9-1ef0c5bece6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gifs">
+      <UniqueIdentifier>{2d796a44-7209-4a66-a748-3d8a85a31eeb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\RealTimeCollisionHandling.zip">
+      <Filter>Bin</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Previews\Gifs\Demo.gif">
+      <Filter>Gifs</Filter>
+    </Image>
   </ItemGroup>
 </Project>

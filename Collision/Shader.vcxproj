@@ -189,6 +189,12 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Filename).o</Outputs>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\RealTimeCollisionHandling.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Previews\Gifs\Demo.gif" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

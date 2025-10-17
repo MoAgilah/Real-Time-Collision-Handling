@@ -12,6 +12,18 @@ The project was originally developed using **DirectX 11**, with ongoing explorat
 
 ---
 
+## 📦 Download & Run
+You can download the latest standalone executable here:
+
+👉 [Download Standalone Executable](https://raw.githubusercontent.com/MoAgilah/Real-Time-Collision-Handling/master/Bin/RealTimeCollisionHandling.zip)
+
+After downloading:
+
+- Extract the .zip file.
+- Open the Collision folder and run the executable:
+  - **Windows:** `Collisions.exe`
+---
+
 ## 📁 Project Structure
 
 ```

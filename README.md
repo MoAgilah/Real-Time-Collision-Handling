@@ -8,9 +8,7 @@ The project was originally developed using **DirectX 11**, with ongoing explorat
 
 ## 🎥 Preview
 
-![Preview](Assets/preview.gif)
-
-*(Demo visualising real-time sphere, ray, and polygon collisions in motion)*
+![Preview](https://raw.githubusercontent.com/MoAgilah/Real-Time-Collision-Handling/master/Previews/Gifs/Demo.gif)
 
 ---
 

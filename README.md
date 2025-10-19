@@ -22,6 +22,8 @@ After downloading:
 - Extract the .zip file.
 - Open the Collision folder and run the executable:
   - **Windows:** `Collisions.exe`
+ 
+> 💡 If you see a Windows SmartScreen prompt, click **More info → Run anyway** (the app is safe but not code-signed).
 ---
 
 ## 📁 Project Structure

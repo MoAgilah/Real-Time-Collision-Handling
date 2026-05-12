@@ -1,8 +1,8 @@
 # Real-Time Collision Handling
 
-A real-time collision detection and response system written in **C++**, featuring narrow-phase intersection tests, a simple broad-phase, and impulse-based resolution within an interactive DirectX sandbox.  
+A modular **C++ collision detection and response system** for real-time game simulation. The project implements narrow-phase intersection tests, a simple broad-phase, and impulse-based collision response within an interactive DirectX sandbox.
 
-The project was originally developed using **DirectX 11**, with ongoing exploration toward **DirectX 12** and modern rendering techniques.
+Originally developed with **DirectX 11**, with future exploration toward DirectX 12 and modern rendering workflows.
 
 ---
 
@@ -12,119 +12,83 @@ The project was originally developed using **DirectX 11**, with ongoing explorat
 
 ---
 
-## 📦 Download & Run
-You can download the latest standalone executable here:
+## ⚙️ Key Features
 
-👉 [Download Standalone Executable](https://raw.githubusercontent.com/MoAgilah/Real-Time-Collision-Handling/master/Bin/RealTimeCollisionHandling.zip)
+- Sphere–Sphere collision detection
+- Ray–Sphere, Ray–Cylinder, and Ray–Triangle intersection tests
+- Sphere–Polygon collision tests
+- 1D Sweep and Prune broad-phase
+- Impulse-based collision response
+- Bounce and come-to-rest handling
+- Modular collision logic separated from rendering and input systems
 
-After downloading:
-
-- Extract the .zip file.
-- Open the Collision folder and run the executable:
-  - **Windows:** `Collisions.exe`
- 
-> 💡 If you see a Windows SmartScreen prompt, click **More info → Run anyway** (the app is safe but not code-signed).
 ---
 
-## 📁 Project Structure
+## 🧱 Architecture
 
-```
-Collision/    → Collision detection and response logic (your implementation)
-Shared/       → Provided runtime framework for rendering, input, and camera
+The project separates collision detection and response logic from the provided rendering framework. The core `Collision/` module is designed to be reusable and adaptable for future engine integration.
+
+```text
+Collision/    → Collision detection and response logic
+Shared/       → Provided DirectX runtime framework
 *.sln         → Visual Studio solution file
 ```
 
-> The **`Shared/`** folder was **provided by the course lecturer** and distributed to all students.  
-> It serves as scaffolding for visualising and testing your collision system — no internal modifications are required.
+The `Shared/` folder was provided as course scaffolding for rendering, input, and camera control. The collision-handling logic in `Collision/` was independently implemented.
 
 ---
 
-## ⚙️ Features
+## 🛠 Technologies
 
-- **Sphere–Sphere Collision Detection**  
-- **Ray–Sphere Intersection**  
-- **Ray–Cylinder Intersection**  
-- **Ray–Triangle Intersection**  
-- **Sphere–Polygon Tests**  
-- **1D Sweep and Prune (Broad-Phase)**  
-- **Impulse-Based Collision Resolution**  
-- **Come-to-Rest and Bounce Handling**
+- C++
+- Visual Studio
+- DirectX 11
+- Real-time simulation
+- Collision detection and physics response
 
 ---
 
-## 🎮 Controls
+## 🚀 Build & Run
 
-| Key | Action |
-|-----|--------|
-| Space | Toggle 1 FPS slow motion |
-| W | Toggle wireframe mode |
-| C | Switch camera view (Side / Top) |
-| R | Drop a ball on a random triangle |
-| T | Drop a ball on the flat top triangle |
-| U / I | Move marked triangle (Left / Right) |
-| D | Drop a debug ball at predefined points |
-| N | Move debug-ball target |
-| E | Deactivate all active balls |
-| F | Drop a ball on a marked triangle & its inverse |
-| G / H | Disable / re-enable bottom triangles |
-| ↑ / ↓ | Increase / decrease number of balls |
-| B | Drop configured number of balls |
-| M | Cycle through heightmaps |
+### Requirements
 
-**Camera Controls (Side View):**
+- Visual Studio 2019 or 2022
+- Windows 10/11 SDK
+- DirectX 11-compatible setup
 
-| Key | Action |
-|-----|--------|
-| Q | Zoom in |
-| A | Zoom out |
-| O | Rotate left |
-| P | Rotate right |
+### Steps
+
+1. Clone the repository.
+2. Open `Real Time Collision Handling.sln`.
+3. Set the configuration to **x64 → Debug** or **Release**.
+4. Build and run the project.
+
+A standalone executable is also available in the repository release/download section.
 
 ---
 
-## 🧱 Building the Project
+## 🔭 Future Work
 
-**Requirements**
-- Visual Studio 2019 or 2022  
-- Windows 10/11 SDK  
-- DirectX 11 (legacy) or compatible DX12 setup  
-
-**Steps**
-1. Open `Real Time Collision Handling.sln`.  
-2. Set the build configuration to **x64 → Debug** or **Release**.  
-3. Press **F5** to build and run the demo.
-
----
-
-## 🚀 Integration
-
-The `Collision/` module can be reused independently of the provided demo viewer.  
-
-To integrate it into another project:
-- Include the headers from `Collision/`.
-- Replace `Shared/` types with your own math and engine types as needed.
-- Hook the update and resolution functions into your own game loop or physics system.
-
----
-
-## 🔭 Future Improvements
-
-- Enhanced resting state and friction simulation  
-- Bounding Volume Hierarchy (BVH) integration  
-- Optimised real-time checks for large object counts  
+- Bounding Volume Hierarchy integration
+- Spatial partitioning structures
+- Improved friction and resting-state handling
+- Debug visualisation tools
+- ECS or engine-level integration
+- Multi-threaded collision processing
 
 ---
 
 ## 🙏 Acknowledgements
 
-- **`Shared/`** scaffolding and runtime viewer were **provided by the course lecturer** and distributed to all students for demonstration purposes.  
-- The **collision-handling logic** within `Collision/` was independently implemented by the author.  
+- The `Shared/` runtime framework was provided as university course scaffolding.
+- Collision detection and response systems within `Collision/` were independently implemented by the author.
 - DirectX documentation and course materials were referenced for rendering and runtime setup.
 
+---
+
 ## 👤 Author
+
 **Mohamed Agilah**  
 🎓 Games Programmer & AI Developer  
-🌐 [Portfolio Website](https://moagilah.com/)  
-📧 Contact: agilahmohamed@gmail.com  
-
-> *Project archived for educational and portfolio purposes (October 2025).*
+🌐 https://moagilah.com/  
+📧 agilahmohamed@gmail.com

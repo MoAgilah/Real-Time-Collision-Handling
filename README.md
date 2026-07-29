@@ -1,94 +1,101 @@
-# Real-Time Collision Handling
+# Collisions
 
-A modular **C++ collision detection and response system** for real-time game simulation. The project implements narrow-phase intersection tests, a simple broad-phase, and impulse-based collision response within an interactive DirectX sandbox.
+A modern C++ project exploring collision detection, collision response and real-time physical simulation through interacting spheres within a constrained environment.
 
-Originally developed with **DirectX 11**, with future exploration toward DirectX 12 and modern rendering workflows.
+Collisions investigates the mathematical and software engineering principles behind collision processing by simulating multiple spheres falling under gravity into an inverted pyramid. Rather than focusing on gameplay or engine architecture, the project explores how geometric representation, collision detection and response calculations combine to produce stable and believable physical interactions.
 
----
-
-## 🎥 Preview
-
-![Preview](https://raw.githubusercontent.com/MoAgilah/Real-Time-Collision-Handling/master/Previews/Gifs/Demo.gif)
+The project focuses on algorithm implementation, computational geometry and modular software design, demonstrating how collision systems can be organised into clear, maintainable components while applying concepts commonly found in physics engines and real-time simulations.
 
 ---
 
-## ⚙️ Key Features
+## The Engineering Problem
 
-- Sphere–Sphere collision detection
-- Ray–Sphere, Ray–Cylinder, and Ray–Triangle intersection tests
-- Sphere–Polygon collision tests
-- 1D Sweep and Prune broad-phase
-- Impulse-based collision response
-- Bounce and come-to-rest handling
-- Modular collision logic separated from rendering and input systems
+Collision processing is a fundamental requirement for many real-time applications, yet implementing reliable collision systems involves significantly more than detecting overlapping objects. Dynamic bodies must interact consistently with one another and their environment while maintaining stable behaviour across repeated collisions.
+
+Collisions explores this challenge by implementing the algorithms required to detect and resolve interactions between multiple moving spheres and the static faces of an inverted pyramid. The project investigates how collision detection, response calculations and supporting mathematics can be organised into a maintainable C++ application while demonstrating the core concepts underpinning real-time physics simulation.
 
 ---
 
-## 🧱 Architecture
+## Simulation Architecture
 
-The project separates collision detection and response logic from the provided rendering framework. The core `Collision/` module is designed to be reusable and adaptable for future engine integration.
+<p align="center">
+  <img width="700" alt="RealTimeCollisionHandling" src="https://github.com/user-attachments/assets/7cd6d959-020f-4f6b-a9f6-d48b896cf515" />
+</p>
 
-```text
-Collision/    → Collision detection and response logic
-Shared/       → Provided DirectX runtime framework
-*.sln         → Visual Studio solution file
-```
-
-The `Shared/` folder was provided as course scaffolding for rendering, input, and camera control. The collision-handling logic in `Collision/` was independently implemented.
+The simulation is organised into modular systems responsible for object representation, collision detection, collision response and supporting mathematical operations. Each subsystem performs a focused responsibility while contributing to the overall simulation, allowing collision processing to remain clearly separated from simulation management and rendering.
 
 ---
 
-## 🛠 Technologies
+## Engineering Goals
 
-- C++
-- Visual Studio
-- DirectX 11
+The project was designed to explore:
+
+- Collision detection algorithms
+- Collision response techniques
+- Sphere-to-sphere interactions
+- Sphere-to-environment collisions
+- Computational geometry
+- Vector mathematics
 - Real-time simulation
-- Collision detection and physics response
+- Modular software organisation
+
+Although demonstrated through spheres interacting within an inverted pyramid, the engineering concepts explored are applicable to graphics engines, simulation software and interactive real-time applications.
 
 ---
 
-## 🚀 Build & Run
+## Key Features
 
-### Requirements
-
-- Visual Studio 2019 or 2022
-- Windows 10/11 SDK
-- DirectX 11-compatible setup
-
-### Steps
-
-1. Clone the repository.
-2. Open `Real Time Collision Handling.sln`.
-3. Set the configuration to **x64 → Debug** or **Release**.
-4. Build and run the project.
-
-A standalone executable is also available in the repository release/download section.
+- Multi-body sphere simulation under gravity
+- Sphere-to-sphere collision detection and response
+- Sphere-to-environment collision handling
+- Inverted pyramid collision boundaries
+- Collision normal and response calculations
+- DirectXMath vector mathematics
+- Modular collision processing systems
+- Stable real-time simulation behaviour
 
 ---
 
-## 🔭 Future Work
+## Technologies & Engineering Practices
 
-- Bounding Volume Hierarchy integration
-- Spatial partitioning structures
-- Improved friction and resting-state handling
-- Debug visualisation tools
-- ECS or engine-level integration
-- Multi-threaded collision processing
+### Development
+
+- C++20
+- DirectXMath
+- Visual Studio 2022
+- Git
+- Git Submodules
+
+### Engineering Practices
+
+- Collision Detection
+- Collision Response
+- Computational Geometry
+- Real-Time Simulation
+- Object-Oriented Design
+- Separation of Concerns
+- Modular Software Design
+- Vector Mathematics
+- Mathematical Optimisation
+- Performance-Oriented Programming
 
 ---
 
-## 🙏 Acknowledgements
+## Architecture Highlights
 
-- The `Shared/` runtime framework was provided as university course scaffolding.
-- Collision detection and response systems within `Collision/` were independently implemented by the author.
-- DirectX documentation and course materials were referenced for rendering and runtime setup.
+- Collision detection separated from collision response
+- Modular simulation components with focused responsibilities
+- Sphere-to-sphere and sphere-to-environment interactions
+- Geometric primitives driving collision calculations
+- DirectXMath SIMD vector mathematics
+- Stable multi-object collision processing
 
 ---
 
-## 👤 Author
+## Engineering Outcome
 
-**Mohamed Agilah**  
-🎓 Games Programmer & AI Developer  
-🌐 https://moagilah.com/  
-📧 agilahmohamed@gmail.com
+Collisions demonstrates how the mathematical principles behind real-time collision processing can be translated into a structured C++ application. By simulating multiple spheres interacting within an inverted pyramid, the project explores collision detection, collision response and computational geometry while maintaining a modular software architecture.
+
+Rather than functioning as a complete physics engine, the project serves as a practical investigation into collision processing, demonstrating experience with vector mathematics, geometric algorithms and the engineering considerations involved in building stable real-time simulations.
+
+---
